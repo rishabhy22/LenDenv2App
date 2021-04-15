@@ -503,7 +503,10 @@ class _RegisterPageState extends State<RegisterPage> with CommonPageDesign {
                         fit: BoxFit.fill,
                         child: file != null
                             ? Image.file(file)
-                            : Image.asset('assets/images/avatar.jpg'),
+                            : Image.asset(
+                                'assets/images/avatar.png',
+                                color: Colors.black,
+                              ),
                       ),
                     ),
                   ),

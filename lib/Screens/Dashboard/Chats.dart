@@ -30,9 +30,21 @@ class CustomSliverList extends StatelessWidget {
                               ]));
                         },
                         child: Container(
-                            height: SizeConfig.screenHeight * 0.1,
-                            child: Text(
-                                conversations.elementAt(index ~/ 2).title)),
+                          height: SizeConfig.screenHeight * 0.1,
+                          child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              subtitle: Text(
+                                "${conversations.elementAt(index ~/ 2).lastMemo["sender_id"] ?? ''} : ${conversations.elementAt(index ~/ 2).lastMemo["memo"] ?? ''}",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              title: Text(
+                                conversations.elementAt(index ~/ 2).title,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.blockSizeVertical * 5,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ),
                       ),
                     )
                   : Divider(
@@ -41,7 +53,7 @@ class CustomSliverList extends StatelessWidget {
                       indent: SizeConfig.screenWidth * 0.038,
                       endIndent: SizeConfig.screenWidth * 0.038,
                     );
-            }, childCount: 2 * conversations.length),
+            }, childCount: 2 * conversations.length + 1),
           )
         : SliverFillRemaining(
             child: Center(

@@ -1,7 +1,8 @@
 class Conversation {
   String id, title, creatorId, desc;
   List<dynamic> participants;
-  double createdAt;
+  double createdAt, lastCommit;
+  Map<dynamic, dynamic> lastMemo;
 
   Conversation.fromJson(Map<String, dynamic> data) {
     this.id = data["_id"];
@@ -10,6 +11,8 @@ class Conversation {
     this.createdAt = data["created_at"];
     this.participants = data['participants'];
     this.desc = data['description'];
+    this.lastCommit = data['last_commit'];
+    this.lastMemo = data["last_memo"];
   }
 
   Map<String, dynamic> toJson() {
@@ -19,7 +22,9 @@ class Conversation {
       "creator_id": this.creatorId,
       "created_at": this.createdAt,
       "participants": this.participants,
-      "description": this.desc
+      "description": this.desc,
+      "last_commit": this.lastCommit,
+      "last_memo": this.lastMemo
     };
   }
 }

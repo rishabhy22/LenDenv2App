@@ -1,19 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:se_len_den/BLoC/ConnectionsBloc.dart';
 import 'package:se_len_den/BLoC/ConversationsBLoc.dart';
 import 'package:se_len_den/BLoC/RoutesBloc.dart';
 import 'package:se_len_den/Models/Connection.dart';
-import 'package:se_len_den/Models/OtherUser.dart';
+
 import 'package:se_len_den/UIElements/ClippedContainer.dart';
 import 'package:se_len_den/utils/deviceSizing.dart';
 import 'package:se_len_den/utils/support.dart';
 
 class AddConversation extends StatefulWidget {
-  final String accessToken;
-  AddConversation({this.accessToken});
+  final String accessToken, userId;
+  AddConversation({this.accessToken, this.userId});
   @override
   _AddConversationState createState() => _AddConversationState();
 }
@@ -270,7 +268,12 @@ class _AddConversationState extends State<AddConversation>
                                         await Future.delayed(
                                             Duration(milliseconds: 500));
                                         RoutesBloc().setRoute(RouteWithData(
-                                            route: Routes.MEMO, data: null));
+                                            route: Routes.MEMO,
+                                            data: [
+                                              this.widget.accessToken,
+                                              this.widget.userId,
+                                              status.data
+                                            ]));
                                       }
                                       setState(() {
                                         isLoading = false;

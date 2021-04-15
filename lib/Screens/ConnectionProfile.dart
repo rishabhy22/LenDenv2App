@@ -50,7 +50,7 @@ class ConnectionProfile extends StatelessWidget with CommonPageDesign {
                                     "Content-Type": "multipart/form-data",
                                     "Connection": "keep-alive"
                                   })
-                            : AssetImage('assets/images/avatar.jpg'))),
+                            : AssetImage('assets/images/avatar.png'))),
                 child: Text(
                   otherUser.firstName + ' ' + otherUser.lastName,
                   style: TextStyle(

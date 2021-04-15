@@ -22,6 +22,7 @@ class AuthBloc {
   String signinRoute = "/signin";
   String signupRoute = "/signup";
   String verifyTokenRoute = "/verify/token";
+  String verifyEmail = "/verify/email";
 
   Map<String, String> headers = {"Content-Type": "application/json"};
 
@@ -107,6 +108,27 @@ class AuthBloc {
     UserPreferences.setUserPreference(null);
     setAuth(AuthResponse(
         error: null, status: "success", statusCode: 200, user: null));
+  }
+
+  Future<Status> sendVerificationMail(String accessToken) async {
+    Map<String, String> authHeader = {
+      "Content-Type": "application/json",
+      "Authorization": "Token $accessToken"
+    };
+    try {
+      http.Response response = await http.get(Uri.parse(endpoint + verifyEmail),
+          headers: authHeader);
+
+      var res = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return Status("success", null, 200);
+      } else {
+        return Status(res["status"], res["error"], response.statusCode);
+      }
+    } catch (e) {
+      return Status("failure", e.toString(), 0);
+    }
   }
 
   Future<void> verifyToken() async {

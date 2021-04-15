@@ -26,6 +26,10 @@ class ConvoBloc {
       if (response.statusCode == 200) {
         List<Conversation> convos = List<Conversation>.empty(growable: true);
         for (var c in res["data"]) convos.add(Conversation.fromJson(c));
+        convos.sort((a, b) {
+          if (a.lastCommit > b.lastCommit) return -1;
+          return 1;
+        });
         return convos;
       } else {
         return List<Conversation>.empty();
@@ -52,7 +56,8 @@ class ConvoBloc {
           headers: authHeader, body: jsonEncode(body));
       var res = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        return Status("success", null, 200);
+        return Status("success", null, 200,
+            data: Conversation.fromJson(res["data"]));
       } else {
         return Status(res["status"], res["error"], response.statusCode);
       }

@@ -130,109 +130,106 @@ class _ConnectionsScreenState extends State<ConnectionsScreen>
                 }),
             AnimatedBuilder(
                 animation: animationController,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.003,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.screenWidth * 0.05,
+                          right: SizeConfig.screenWidth * 0.05),
+                      child: TextField(
+                        style: theme.textTheme.bodyText1,
+                        controller: textEditingController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search_sharp),
+                            onPressed: () {
+                              setState(() {
+                                value = textEditingController.text;
+                              });
+                            },
+                          ),
+                          isDense: true,
+                          hintText: "Enter Username Here",
+                          hintStyle: TextStyle(
+                            fontSize: 2 *
+                                SizeConfig.blockSizeVertical *
+                                SizeConfig.blockSizeHorizontal,
+                            height: 0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.screenWidth * 0.04,
+                          right: SizeConfig.screenWidth * 0.04,
+                          bottom: SizeConfig.screenHeight * 0.01),
+                      child: Divider(
+                        color: Colors.black,
+                        height: 0,
+                        thickness: 1,
+                      ),
+                    ),
+                    FutureBuilder<List<OtherUser>>(
+                        initialData: List<OtherUser>.empty(),
+                        future: ConnectionsBloc()
+                            .fetchUsers(this.widget.accessToken, value),
+                        builder: (context, snapshot) {
+                          return LimitedBox(
+                            maxHeight: SizeConfig.screenHeight * 0.4,
+                            child: snapshot.hasData
+                                ? (snapshot.data.length != 0
+                                    ? ListView.builder(
+                                        padding: EdgeInsets.only(
+                                          left: SizeConfig.screenWidth * 0.04,
+                                          right: SizeConfig.screenWidth * 0.04,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom:
+                                                    SizeConfig.screenHeight *
+                                                        0.01),
+                                            child: CustomCard(
+                                              accessToken:
+                                                  this.widget.accessToken,
+                                              otherUser: snapshot.data
+                                                  .elementAt(index),
+                                              isUserEmailVerified: this
+                                                  .widget
+                                                  .isUserEmailVerified,
+                                            ),
+                                          );
+                                        },
+                                        itemCount: snapshot.data.length,
+                                      )
+                                    : Center(
+                                        child: Image.asset(
+                                        "assets/images/empty.png",
+                                        width: SizeConfig.screenWidth * 0.2,
+                                        height: SizeConfig.screenHeight * 0.15,
+                                        color: Colors.white,
+                                      )))
+                                : Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                          );
+                        })
+                  ],
+                ),
                 builder: (context, child) {
                   return Container(
-                    padding: EdgeInsets.zero,
-                    color: theme.accentColor,
-                    height: SizeConfig.screenHeight *
-                        0.5 *
-                        animationController.value,
-                    child: ListView(
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.screenHeight * 0.003,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.screenWidth * 0.05,
-                              right: SizeConfig.screenWidth * 0.05),
-                          child: TextField(
-                            style: theme.textTheme.bodyText1,
-                            controller: textEditingController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.search_sharp),
-                                onPressed: () {
-                                  setState(() {
-                                    value = textEditingController.text;
-                                  });
-                                },
-                              ),
-                              isDense: true,
-                              hintText: "Enter Username Here",
-                              hintStyle: TextStyle(
-                                fontSize: 2 *
-                                    SizeConfig.blockSizeVertical *
-                                    SizeConfig.blockSizeHorizontal,
-                                height: 0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.screenWidth * 0.04,
-                              right: SizeConfig.screenWidth * 0.04,
-                              bottom: SizeConfig.screenHeight * 0.01),
-                          child: Divider(
-                            color: Colors.black,
-                            height: 0,
-                            thickness: 1,
-                          ),
-                        ),
-                        FutureBuilder<List<OtherUser>>(
-                            initialData: List<OtherUser>.empty(),
-                            future: ConnectionsBloc()
-                                .fetchUsers(this.widget.accessToken, value),
-                            builder: (context, snapshot) {
-                              return LimitedBox(
-                                maxHeight: SizeConfig.screenHeight * 0.4,
-                                child: snapshot.hasData
-                                    ? (snapshot.data.length != 0
-                                        ? ListView.builder(
-                                            padding: EdgeInsets.only(
-                                              left:
-                                                  SizeConfig.screenWidth * 0.04,
-                                              right:
-                                                  SizeConfig.screenWidth * 0.04,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: SizeConfig
-                                                            .screenHeight *
-                                                        0.01),
-                                                child: CustomCard(
-                                                  accessToken:
-                                                      this.widget.accessToken,
-                                                  otherUser: snapshot.data
-                                                      .elementAt(index),
-                                                  isUserEmailVerified: this
-                                                      .widget
-                                                      .isUserEmailVerified,
-                                                ),
-                                              );
-                                            },
-                                            itemCount: snapshot.data.length,
-                                          )
-                                        : Center(
-                                            child: Image.asset(
-                                            "assets/images/empty.png",
-                                            width: SizeConfig.screenWidth * 0.2,
-                                            height:
-                                                SizeConfig.screenHeight * 0.15,
-                                            color: Colors.white,
-                                          )))
-                                    : Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                              );
-                            })
-                      ],
-                    ),
-                  );
+                      padding: EdgeInsets.zero,
+                      color: theme.accentColor,
+                      height: SizeConfig.screenHeight *
+                          0.5 *
+                          animationController.value,
+                      child: child);
                 })
           ],
         ),

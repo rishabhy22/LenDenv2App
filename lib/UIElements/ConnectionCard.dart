@@ -8,7 +8,7 @@ import 'package:se_len_den/utils/deviceSizing.dart';
 class CustomCard extends StatelessWidget {
   final OtherUser otherUser;
   final String accessToken;
-  bool isUserEmailVerified;
+  final bool isUserEmailVerified;
   CustomCard({this.accessToken, this.otherUser, this.isUserEmailVerified});
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class CustomCard extends StatelessWidget {
         leading: Padding(
           padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.1),
           child: otherUser.imageUrl == null
-              ? Image.asset('assets/images/avatar.jpg')
+              ? Image.asset('assets/images/avatar.png')
               : Image.network(
                   otherUser.imageUrl.replaceAll("127.0.0.1", "10.0.2.2"),
                   fit: BoxFit.fill,

@@ -5,9 +5,9 @@ import 'package:se_len_den/utils/deviceSizing.dart';
 import 'package:se_len_den/utils/support.dart';
 
 class CustomDrawer extends StatelessWidget with CommonPageDesign {
-  final String imgUrl, accessToken;
+  final String imgUrl, accessToken, userId;
 
-  CustomDrawer({this.imgUrl, this.accessToken});
+  CustomDrawer({this.imgUrl, this.accessToken, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class CustomDrawer extends StatelessWidget with CommonPageDesign {
                                 (SizeConfig.screenHeight * 0.25).toInt(),
                             cacheWidth: (SizeConfig.screenWidth * 0.65).toInt(),
                           )
-                        : Image.asset('assets/images/avatar.jpg')),
+                        : Image.asset('assets/images/avatar.png')),
                 Expanded(
                   flex: 3,
                   child: ListView(
@@ -69,7 +69,7 @@ class CustomDrawer extends StatelessWidget with CommonPageDesign {
                         onTap: () {
                           RoutesBloc().setRoute(RouteWithData(
                               route: Routes.ADDCONVERSATION,
-                              data: this.accessToken));
+                              data: [this.accessToken, this.userId]));
                         },
                         child: Text(
                           'Add Conversation',

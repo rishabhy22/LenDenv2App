@@ -5,6 +5,7 @@ import 'package:se_len_den/Screens/AddConversation.dart';
 import 'package:se_len_den/Screens/Authentication/Authentication.dart';
 import 'package:se_len_den/Screens/ConnectionProfile.dart';
 import 'package:se_len_den/Screens/Connections.dart';
+import 'package:se_len_den/Screens/ConversationProfile.dart';
 import 'package:se_len_den/Screens/Dashboard/Dashboard.dart';
 import 'package:se_len_den/Screens/MemoScreen.dart';
 
@@ -41,9 +42,16 @@ class AfterAuthWrapper extends StatelessWidget {
               case Routes.ADDCONVERSATION:
                 return AddConversation(
                   accessToken: this.user.accessToken,
+                  userId: this.user.userId,
                 );
               case Routes.MEMO:
                 return MemoScreen(
+                  accessToken: snapshot.data.data[0],
+                  userId: snapshot.data.data[1],
+                  conversation: snapshot.data.data[2],
+                );
+              case Routes.CONVERSATIONPROFILE:
+                return ConversationProfile(
                   accessToken: snapshot.data.data[0],
                   userId: snapshot.data.data[1],
                   conversation: snapshot.data.data[2],

@@ -39,12 +39,12 @@ class MemoBloc {
               .build());
       socket.connect();
       socket.on('join', (data) {
-        print(data);
+        print("join : " + data);
         var res = jsonDecode(data);
         setJoinMemoResponse(JoinMemoResponse.fromJson(res));
       });
       socket.on('chat', (data) {
-        print(data);
+        print("chat : " + data);
         var res = jsonDecode(data);
         setMemoResponse(MemoResponse.fromJson(res));
       });
@@ -66,7 +66,7 @@ class MemoBloc {
   void sendMessage(
       {String memoType,
       String msgType,
-      String transType,
+      int transType,
       dynamic memo,
       String convoId}) {
     socket.emit('chat', {

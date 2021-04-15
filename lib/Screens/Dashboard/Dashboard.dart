@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:se_len_den/BLoC/AuthenticationBloc.dart';
 
 import 'package:se_len_den/BLoC/ConversationsBLoc.dart';
 import 'package:se_len_den/Models/Conversation.dart';
@@ -33,14 +34,36 @@ class _DashboardState extends State<Dashboard> with CommonPageDesign {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: Duration(seconds: 6),
           content: Text(
-            "You are not Email Verified. Check ${widget.user.email}",
+            "You are not Email Verified. Check ${widget.user.email}. Didn't recieve?",
             style: Theme.of(context).textTheme.subtitle2,
           ),
           backgroundColor: Theme.of(context).primaryColor,
           action: SnackBarAction(
             label: 'Send Again',
-            onPressed: () {
+            onPressed: () async {
+              var status = await AuthBloc()
+                  .sendVerificationMail(widget.user.accessToken);
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              if (status.status == "success") {
+                print(status.statusCode);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: SnackBar(
+                  content: Text(
+                    "Email Sent again. Check ${widget.user.email}.",
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                )));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: SnackBar(
+                  content: Text(
+                    status.error,
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                )));
+              }
             },
           ),
         ));
@@ -72,6 +95,7 @@ class _DashboardState extends State<Dashboard> with CommonPageDesign {
         key: scaffoldKey,
         drawer: CustomDrawer(
           imgUrl: widget.user.profilePicUrl,
+          userId: widget.user.userId,
           accessToken: widget.user.accessToken,
         ),
         body: Stack(
@@ -141,10 +165,16 @@ class _DashboardState extends State<Dashboard> with CommonPageDesign {
                                                           0.03),
                                               child: ClippedButton(
                                                 child: Container(
+                                                  alignment: Alignment.center,
                                                   color: Colors.white,
                                                   height:
                                                       SizeConfig.screenHeight *
                                                           0.065,
+                                                  child: Text(index == 0
+                                                      ? "Rs. 4000 asked by you in Kles Lucknow party"
+                                                      : (index == 1
+                                                          ? "Rs. 2200 asked by rishu in Kles Lucknow party"
+                                                          : "Nothing more to show")),
                                                 ),
                                               ),
                                             );
