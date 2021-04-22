@@ -9,6 +9,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:se_len_den/Models/AuthResponse.dart';
 import 'package:se_len_den/Models/RequestStatus.dart';
 import 'package:http/http.dart' as http;
+import 'package:se_len_den/Models/User.dart';
 import 'package:se_len_den/Preferences/UserPreferences.dart';
 
 class AuthBloc {
@@ -150,7 +151,7 @@ class AuthBloc {
               error: reqBody["error"],
               status: reqBody["status"],
               statusCode: 200,
-              user: user));
+              user: User.fromJson(reqBody["data"])));
         } else {
           setAuth(AuthResponse(
               error: reqBody["error"],

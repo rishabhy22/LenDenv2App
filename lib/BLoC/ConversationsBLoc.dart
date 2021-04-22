@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:se_len_den/Models/Conversation.dart';
 import 'package:se_len_den/Models/RequestStatus.dart';
+import 'package:se_len_den/Models/Summary.dart';
 
 class ConvoBloc {
   static final ConvoBloc _convoBloc = ConvoBloc._private();
@@ -11,6 +12,7 @@ class ConvoBloc {
 
   String endpoint = "http://10.0.2.2:5002";
   String convoRoute = "/convo";
+  String summarizeRoute = "/summary";
 
   Future<List<Conversation>> getConvo(String accessToken) async {
     try {
@@ -63,6 +65,33 @@ class ConvoBloc {
       }
     } catch (e) {
       return Status("failure", e.toString(), 0);
+    }
+  }
+
+  Future<SummaryResponse> getSummary(String accessToken, String convoId) async {
+    try {
+      Map<String, String> authHeader = {
+        "Content-Type": "application/json",
+        "Authorization": "Token $accessToken"
+      };
+
+      http.Response response = await http.get(
+          Uri.parse(endpoint + summarizeRoute + "/$convoId"),
+          headers: authHeader);
+
+      print(response.body);
+
+      var res = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return SummaryResponse.fromJson(res);
+      } else {
+        return SummaryResponse.fromJson(res);
+      }
+    } catch (e) {
+      print(e);
+      return SummaryResponse(
+          status: "failure", error: e.toString(), due: null, cashFlow: null);
     }
   }
 }

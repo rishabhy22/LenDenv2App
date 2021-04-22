@@ -49,6 +49,7 @@ class AfterAuthWrapper extends StatelessWidget {
                   accessToken: snapshot.data.data[0],
                   userId: snapshot.data.data[1],
                   conversation: snapshot.data.data[2],
+                  initialMsg: snapshot.data.data[3],
                 );
               case Routes.CONVERSATIONPROFILE:
                 return ConversationProfile(

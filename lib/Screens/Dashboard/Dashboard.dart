@@ -29,7 +29,8 @@ class _DashboardState extends State<Dashboard> with CommonPageDesign {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await AuthBloc().verifyToken();
       if (!this.widget.user.emailVerified) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: Duration(seconds: 6),
@@ -47,27 +48,25 @@ class _DashboardState extends State<Dashboard> with CommonPageDesign {
               if (status.status == "success") {
                 print(status.statusCode);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: SnackBar(
                   content: Text(
                     "Email Sent again. Check ${widget.user.email}.",
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   backgroundColor: Theme.of(context).primaryColor,
-                )));
+                ));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: SnackBar(
                   content: Text(
                     status.error,
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   backgroundColor: Theme.of(context).primaryColor,
-                )));
+                ));
               }
             },
           ),
         ));
-      }
+      } else {}
     });
 
     timer = Timer.periodic(Duration(seconds: 20), (t) {

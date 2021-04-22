@@ -69,7 +69,7 @@ class CustomChatBubble extends StatelessWidget {
                 : Container(
                     width: SizeConfig.screenWidth * 0.5,
                     child: Text(
-                      memo.memo,
+                      memo.memo.toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.white,

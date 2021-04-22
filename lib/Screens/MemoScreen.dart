@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:se_len_den/BLoC/MemoBloc.dart';
 import 'package:se_len_den/BLoC/RoutesBloc.dart';
 import 'package:se_len_den/Models/Conversation.dart';
-import 'package:se_len_den/Models/Memo.dart';
 import 'package:se_len_den/Models/MemoResponse.dart';
 import 'package:se_len_den/UIElements/MemoBubble.dart';
 import 'package:se_len_den/utils/deviceSizing.dart';
@@ -16,8 +13,10 @@ class MemoScreen extends StatefulWidget {
   final String accessToken;
   final String userId;
   final Conversation conversation;
+  final String initialMsg;
 
-  MemoScreen({this.accessToken, this.userId, this.conversation});
+  MemoScreen(
+      {this.accessToken, this.userId, this.conversation, this.initialMsg});
 
   @override
   _MemoScreenState createState() => _MemoScreenState();
@@ -43,6 +42,14 @@ class _MemoScreenState extends State<MemoScreen>
     MemoBloc().init();
     MemoBloc().connectAndListen(widget.accessToken);
     MemoBloc().joinConvo(widget.conversation.id);
+
+    if (this.widget.initialMsg != null && this.widget.initialMsg.isNotEmpty) {
+      MemoBloc().sendMessage(
+          memoType: "chat",
+          msgType: "msg",
+          convoId: widget.conversation.id,
+          memo: this.widget.initialMsg);
+    }
   }
 
   @override
@@ -126,15 +133,28 @@ class _MemoScreenState extends State<MemoScreen>
                             bottom: SizeConfig.screenWidth * 0.02),
                         child: StreamBuilder<JoinMemoResponse>(
                             stream: MemoBloc().getJoinMemoResponse,
+                            initialData: JoinMemoResponse.fromJson({
+                              "status": "success",
+                              "error": null,
+                              "data": []
+                            }),
                             builder: (context, joinSnapshot) {
                               return joinSnapshot.hasData
                                   ? StreamBuilder<MemoResponse>(
                                       stream: MemoBloc().getMemoResponse,
                                       builder: (context, memoSnapshot) {
                                         if (memoSnapshot.hasData &&
+                                            joinSnapshot
+                                                .data.memoList.isNotEmpty &&
                                             memoSnapshot.data.memo.id !=
                                                 joinSnapshot
                                                     .data.memoList.last.id) {
+                                          joinSnapshot.data.memoList
+                                              .add(memoSnapshot.data.memo);
+                                        }
+                                        if (memoSnapshot.hasData &&
+                                            joinSnapshot
+                                                .data.memoList.isEmpty) {
                                           joinSnapshot.data.memoList
                                               .add(memoSnapshot.data.memo);
                                         }
@@ -324,7 +344,8 @@ class _MemoScreenState extends State<MemoScreen>
                                         memoType: "transaction",
                                         transType: -1,
                                         convoId: widget.conversation.id,
-                                        memo: textEditingControllerBottom.text);
+                                        memo: int.parse(
+                                            textEditingControllerBottom.text));
                                     textEditingControllerBottom.clear();
                                   }
                                 }),
@@ -346,7 +367,8 @@ class _MemoScreenState extends State<MemoScreen>
                                         memoType: "transaction",
                                         transType: 1,
                                         convoId: widget.conversation.id,
-                                        memo: textEditingControllerBottom.text);
+                                        memo: int.parse(
+                                            textEditingControllerBottom.text));
                                     textEditingControllerBottom.clear();
                                   }
                                 },

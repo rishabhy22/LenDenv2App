@@ -26,7 +26,8 @@ class CustomSliverList extends StatelessWidget {
                               data: [
                                 this.accessToken,
                                 this.userId,
-                                this.conversations.elementAt(index ~/ 2)
+                                this.conversations.elementAt(index ~/ 2),
+                                null
                               ]));
                         },
                         child: Container(
@@ -35,6 +36,8 @@ class CustomSliverList extends StatelessWidget {
                               contentPadding: EdgeInsets.zero,
                               subtitle: Text(
                                 "${conversations.elementAt(index ~/ 2).lastMemo["sender_id"] ?? ''} : ${conversations.elementAt(index ~/ 2).lastMemo["memo"] ?? ''}",
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(color: Colors.white),
                               ),
                               title: Text(

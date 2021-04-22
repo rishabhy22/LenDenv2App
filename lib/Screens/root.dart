@@ -33,9 +33,8 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print("Auth event : " + jsonEncode(snapshot.data));
+            UserPreferences.setUserPreference(snapshot.data.user);
             if (snapshot.data.user != null) {
-              UserPreferences.setUserPreference(snapshot.data.user);
-
               return AfterAuthWrapper(
                 user: snapshot.data.user,
               );
